@@ -117,7 +117,7 @@ abstract class MongoParsingUtils {
 				"poolMaintenanceFrequencyMS");
 
 		// SSL Settings
-		setPropertyValue(clientOptionsDefBuilder, settingsElement, "ssl-enabled", "poolMaxSize");
+		setPropertyValue(clientOptionsDefBuilder, settingsElement, "ssl-enabled", "sslEnabled");
 		setPropertyValue(clientOptionsDefBuilder, settingsElement, "ssl-invalid-host-name-allowed",
 				"sslInvalidHostNameAllowed");
 		setPropertyValue(clientOptionsDefBuilder, settingsElement, "ssl-provider", "sslProvider");
@@ -130,7 +130,7 @@ abstract class MongoParsingUtils {
 
 		mongoClientBuilder.addPropertyValue("mongoClientSettings", clientOptionsDefBuilder.getBeanDefinition());
 
-		return false;
+		return true;
 	}
 
 	/**

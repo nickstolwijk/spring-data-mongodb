@@ -16,15 +16,18 @@
 package org.springframework.data.mongodb.core;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 
 import org.bson.codecs.configuration.CodecRegistry;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.lang.Nullable;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import com.mongodb.AutoEncryptionSettings;
 import com.mongodb.MongoClientSettings;
@@ -37,9 +40,6 @@ import com.mongodb.connection.ClusterConnectionMode;
 import com.mongodb.connection.ClusterType;
 import com.mongodb.connection.ServerSettings;
 import com.mongodb.connection.StreamFactoryFactory;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * A factory bean for construction of a {@link MongoClientSettings} instance to be used with a MongoDB driver.
@@ -112,8 +112,8 @@ public class MongoClientSettingsFactoryBean extends AbstractFactoryBean<MongoCli
 		this.clusterSrvHost = clusterSrvHost;
 	}
 
-	public void setClusterHosts(List<ServerAddress> clusterHosts) {
-		this.clusterHosts = clusterHosts;
+	public void setClusterHosts(ServerAddress[] clusterHosts) {
+		this.clusterHosts = Arrays.asList(clusterHosts);
 	}
 
 	public void setClusterConnectionMode(ClusterConnectionMode clusterConnectionMode) {
@@ -190,7 +190,9 @@ public class MongoClientSettingsFactoryBean extends AbstractFactoryBean<MongoCli
 	// SSL Settings
 	private Boolean sslEnabled = DEFAULT_MONGO_SETTINGS.getSslSettings().isEnabled();
 	private Boolean sslInvalidHostNameAllowed = DEFAULT_MONGO_SETTINGS.getSslSettings().isInvalidHostNameAllowed();
-	private String sslProvider = DEFAULT_MONGO_SETTINGS.getSslSettings().isEnabled() ? DEFAULT_MONGO_SETTINGS.getSslSettings().getContext().getProvider().getName() : "";
+	private String sslProvider = DEFAULT_MONGO_SETTINGS.getSslSettings().isEnabled()
+			? DEFAULT_MONGO_SETTINGS.getSslSettings().getContext().getProvider().getName()
+			: "";
 
 	public void setSslEnabled(Boolean sslEnabled) {
 		this.sslEnabled = sslEnabled;
@@ -310,21 +312,21 @@ public class MongoClientSettingsFactoryBean extends AbstractFactoryBean<MongoCli
 					settings.mode(clusterConnectionMode);
 					settings.requiredReplicaSetName(clusterRequiredReplicaSetName);
 
-					if(!CollectionUtils.isEmpty(clusterHosts)) {
+					if (!CollectionUtils.isEmpty(clusterHosts)) {
 						settings.hosts(clusterHosts);
 					}
 					settings.localThreshold(clusterLocalThresholdMS, TimeUnit.MILLISECONDS);
 					settings.maxWaitQueueSize(clusterMaxWaitQueueSize);
 					settings.requiredClusterType(custerRequiredClusterType);
 
-					if(StringUtils.hasText(clusterSrvHost)) {
+					if (StringUtils.hasText(clusterSrvHost)) {
 						settings.srvHost(clusterSrvHost);
 					}
 				}) //
 				.applyToConnectionPoolSettings((settings) -> {
 
 					settings.minSize(poolMinSize);
-					settings.minSize(poolMaxSize);
+					settings.maxSize(poolMaxSize);
 					settings.maxConnectionIdleTime(poolMaxConnectionIdleTimeMS, TimeUnit.MILLISECONDS);
 					settings.maxWaitTime(poolMaxWaitTimeMS, TimeUnit.MILLISECONDS);
 					settings.maxConnectionLifeTime(poolMaxConnectionLifeTimeMS, TimeUnit.MILLISECONDS);
@@ -348,7 +350,7 @@ public class MongoClientSettingsFactoryBean extends AbstractFactoryBean<MongoCli
 				.applyToSslSettings((settings) -> {
 
 					settings.enabled(sslEnabled);
-					if(ObjectUtils.nullSafeEquals(Boolean.TRUE, sslEnabled)) {
+					if (ObjectUtils.nullSafeEquals(Boolean.TRUE, sslEnabled)) {
 
 						settings.invalidHostNameAllowed(sslInvalidHostNameAllowed);
 						try {

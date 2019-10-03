@@ -30,6 +30,7 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoClientSettings.Builder;
 import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.connection.ClusterSettings;
@@ -136,8 +137,8 @@ public class MongoClientClientFactoryBean extends AbstractFactoryBean<MongoClien
 	protected MongoClient createInstance() throws Exception {
 
 		ConnectionString connectionString = this.connectionString != null ? this.connectionString
-				: new ConnectionString(
-						String.format("mongodb://%s:%s", getOrDefault(host, "127.0.0.1"), getOrDefault(port, "27017")));
+				: new ConnectionString(String.format("mongodb://%s:%s", getOrDefault(host, ServerAddress.defaultHost()),
+						getOrDefault(port, "" + ServerAddress.defaultPort())));
 		Builder builder = MongoClientSettings.builder().applyConnectionString(connectionString);
 		if (mongoClientSettings != null) {
 

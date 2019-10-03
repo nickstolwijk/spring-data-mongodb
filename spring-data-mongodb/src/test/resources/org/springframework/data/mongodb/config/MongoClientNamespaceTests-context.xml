@@ -20,4 +20,22 @@
 
 	<mongo:mongo.mongo-client id="client-with-auth" credential="${credential}" />
 
+	<mongo:mongo.mongo-client id="client-with-cluster-settings" replicaSet="rs0">
+		<mongo:client-settings cluster-connection-mode="MULTIPLE"
+							   cluster-type="REPLICA_SET"
+							   cluster-server-selection-timeout="10"
+							   cluster-local-threshold="5"
+							   cluster-hosts="localhost:27018,localhost:27019,localhost:27020" />
+	</mongo:mongo.mongo-client>
+
+	<mongo:mongo.mongo-client id="client-with-connection-pool-settings" replicaSet="rs0">
+		<mongo:client-settings connection-pool-max-connection-life-time="10"
+							   connection-pool-min-size="10"
+							   connection-pool-max-size="20"
+							   connection-pool-maintenance-frequency="10"
+							   connection-pool-maintenance-initial-delay="11"
+							   connection-pool-max-connection-idle-time="30"
+							   connection-pool-max-wait-queue-size="5"
+							   connection-pool-max-wait-time="15" />
+	</mongo:mongo.mongo-client>
 </beans>
