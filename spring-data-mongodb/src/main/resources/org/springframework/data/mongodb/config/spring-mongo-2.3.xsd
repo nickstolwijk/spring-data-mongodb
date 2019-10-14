@@ -73,6 +73,16 @@ The name of the MongoDbFactory definition (by default "mongoDbFactory").]]></xsd
 				<xsd:annotation>
 					<xsd:documentation><![CDATA[
 The reference to a MongoClient instance. If not configured a default com.mongodb.MongoClient instance will be created.
+@Deprecated since 2.3 - Use mongo-client-ref instead.
+					]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="mongo-client-ref" type="mongoRef" use="optional">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+@since 2.3
+The reference to a MongoClient instance. Supersedes mongo-ref attribute.
 					]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -88,6 +98,13 @@ The name of the database to connect to. Default is 'db'.
 				<xsd:annotation>
 					<xsd:documentation><![CDATA[
 The MongoClientURI string.]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="connection-string" type="xsd:string" use="optional">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+@since 2.3
+The Mongo Connection String. Supersedes clinet-uri]]></xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
 			<xsd:attribute name="write-concern">
@@ -915,7 +932,6 @@ AutoEncryptionSettings for MongoDB 4.2+ - @since 2.2
 			</xsd:annotation>
 		</xsd:attribute>
 	</xsd:complexType>
-
 
 	<xsd:group name="beanElementGroup">
 		<xsd:choice>

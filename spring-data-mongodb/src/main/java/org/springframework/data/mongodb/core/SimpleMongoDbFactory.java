@@ -15,6 +15,7 @@
  */
 package org.springframework.data.mongodb.core;
 
+import com.mongodb.ConnectionString;
 import org.springframework.beans.factory.DisposableBean;
 
 import com.mongodb.ClientSessionOptions;
@@ -46,6 +47,16 @@ public class SimpleMongoDbFactory extends MongoDbFactorySupport<MongoClient> imp
 	 */
 	public SimpleMongoDbFactory(MongoClientURI uri) {
 		this(new MongoClient(uri), uri.getDatabase(), true);
+	}
+
+	/**
+	 * Creates a new {@link SimpleMongoDbFactory} instance from the given {@link MongoClientURI}.
+	 *
+	 * @param connectionString coordinates for a database connection. Must contain a database name and must not be {@literal null}.
+	 * @since 2.3
+	 */
+	public SimpleMongoDbFactory(ConnectionString connectionString) {
+		this(new MongoClientURI(connectionString.getConnectionString()));
 	}
 
 	/**
